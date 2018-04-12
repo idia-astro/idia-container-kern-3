@@ -7,36 +7,49 @@ Include: software-properties-common
 	export LC_ALL=C
 	export SOFTWARE_PATH=/software
 	export PATH=$SOFTWARE_PATH/Montage/bin:$PATH
+	export PATH=/opt/casa/casa-release-5.1.1-5.el7/bin/:$PATH
 
 %post
 	# Installation of the KERN3 packages
-	apt-get update -y 
-	apt-get install -y wget vim apt-utils 
+	apt-get update -y
+	apt-get install -y wget vim apt-utils
 	add-apt-repository -s ppa:kernsuite/kern-3
-        # Restricted required for CUDA support, not for KERN3
-        add-apt-repository restricted
-        apt-add-repository multiverse
-	apt-get update -y 
+  # Restricted required for CUDA support, not for KERN3
+  add-apt-repository restricted
+  apt-add-repository multiverse
+	apt-get update -y
 
-	apt-get install -y cassbeam python-qwt5-qt4 python-qwt5-doc tempo casacore-dev casacore-doc casacore-tools casarest casacore-data meqtrees-timba python-purr python-tigger python-meqtrees-cattery python-owlcat python-kittens python-pyxis python-meqtrees-timba rpfits meqtrees libmeqtrees-timba0 aoflagger wsclean sagecal oskar python-casacore python-attrdict python-pymoresane obit parseltongue libcasasynthesis-dev libcasasynthesis1 libspdlog-dev libcasa-casa2 libcasa-coordinates2 libcasa-derivedmscal2 libcasa-fits2 libcasa-images2 libcasa-lattices2 libcasa-meas2 libcasa-measures2 libcasa-mirlib2 libcasa-ms2 libcasa-msfits2 libcasa-python2 libcasa-python3-2 libcasa-scimath-f2 libcasa-scimath2 libcasa-tables2 python3-casacore psrcat presto tempo2 texlive-fonts-recommended dialog
+	apt-get install -y cassbeam python-qwt5-qt4 python-qwt5-doc tempo casacore-dev casacore-doc casacore-tools casarest casacore-data meqtrees-timba python-purr python-meqtrees-cattery python-owlcat python-kittens python-pyxis python-meqtrees-timba rpfits meqtrees libmeqtrees-timba0 aoflagger wsclean sagecal oskar python-casacore python-attrdict python-pymoresane obit parseltongue libcasasynthesis-dev libcasasynthesis1 libspdlog-dev libcasa-casa2 libcasa-coordinates2 libcasa-derivedmscal2 libcasa-fits2 libcasa-images2 libcasa-lattices2 libcasa-meas2 libcasa-measures2 libcasa-mirlib2 libcasa-ms2 libcasa-msfits2 libcasa-python2 libcasa-python3-2 libcasa-scimath-f2 libcasa-scimath2 libcasa-tables2 python3-casacore psrcat presto tempo2 texlive-fonts-recommended dialog
 	apt-get install -y sigproc psrchive multinest dspsr python-presto python-sourcery singularity-container chgcentre python-tkp libsopt-dev libsopt2.0 aoflagger-dev libaoflagger0 libwsclean0 wsclean-dev python-katversion python-katpoint  python-rfimasker simfast21 dysco 21cmfast libapplcommon0 libbbscontrol0 libbbskernel0 libblob0 libcommon0 libdocker0 libdppp-aoflag0 libdppp0 libelementresponse0 liblmwcommon0 liblofar-pyparameterset0 liblofar-pyparmdb0 liblofar-pystationresponse0 python-montblanc python-pycuda python-mako python-pycuda-doc nvidia-cuda-toolkit nvidia-cuda-dev nvidia-profiler libcuinj64-7.5 libcuda1-361
-	apt-get install -y liblofar-pytools0 liblofarstman0 libmessagebus0 libms0 libmslofar0 libparmdb0 libplc0 libspwcombine0 libstationresponse0 libtransport0 lofar-dev lofar-doc python-lofar stimela msutils simms casalite cub-dev python-transitions python3-transitions python-scatterbrane tmv-dev libtmv0 libtmv-symband0 galsim-dev libgalsim1.5 galsim python-galsim drive-casa sigpyproc tirific karma
+	apt-get install -y liblofar-pytools0 liblofarstman0 libmessagebus0 libms0 libmslofar0 libparmdb0 libplc0 libspwcombine0 libstationresponse0 libtransport0 lofar-dev lofar-doc python-lofar stimela msutils simms casalite cub-dev python-transitions python3-transitions python-scatterbrane tmv-dev libtmv0 libtmv-symband0 galsim-dev libgalsim1.5 galsim python-galsim drive-casa sigpyproc tirific karma python-pyfits  python-astlib python-scipy python-numpy
 
 	# A corruption occurs with texlive and removing this file fixes the problem.
-	rm /var/lib/dpkg/info/texlive-fonts-recommended.list 
+	rm /var/lib/dpkg/info/texlive-fonts-recommended.list
 
 	# Install pip and ipykernel for use with JupyterHub
 	# (note that Python 2.7 requires IPython 5.x LTS edition)
 	apt-get -y install python-pip
 	pip install --upgrade pip # silence pip upgrade warnings
-	pip install 'ipython>=5.0.0,<6.0.0' ipykernel 
+	pip install 'ipython>=5.0.0,<6.0.0' ipykernel
 
 	# Additional packages installed via pip can be added here
-	pip install atpy psutil katdal==0.9
+	pip install atpy psutil katdal==0.9 astro-tigger astro-tigger-lsm
+
+	#Install Cubical
+	pip install git+https://github.com/ratt-ru/CubiCal.git
+
+	#Install Montblac
+	pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
 
 	# Ensure /software is there to install unpackaged stuff
 	SOFTWARE_PATH=/software
 	mkdir -p $SOFTWARE_PATH
+
+	#casa Installation
+	mkdir -p /opt/casa
+	cd /opt/casa
+  wget -O - https://alma-dl.mtk.nao.ac.jp/ftp/casa/distro/linux/release/el7/casa-release-5.1.1-5.el7.tar.gz | tar xz
+
 
 	# Montage 5.x
 	cd $SOFTWARE_PATH
@@ -47,16 +60,15 @@ Include: software-properties-common
 	# Create /users to bind home directories into the container.
 	mkdir -p /users /scratch /data
 
-	# Cleanup 
+	# Cleanup
 	apt-get clean
 	apt-get autoclean
 
-%runscript 
+%runscript
 if [ $# -eq 0 ]; then
 	echo "The following Python modules are installed in this image:"
         pip freeze
-        echo "Example usage: singularity.img [command] [args] [options]"  
+        echo "Example usage: singularity.img [command] [args] [options]"
 else
         exec "$@"
 fi
-
