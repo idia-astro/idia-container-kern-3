@@ -12,7 +12,7 @@ Include: software-properties-common
 %post
 	# Installation of the KERN3 packages
 	apt-get update -y
-	apt-get install -y wget vim apt-utils
+	apt-get install -y wget vim apt-utils git
 	add-apt-repository -s ppa:kernsuite/kern-3
   # Restricted required for CUDA support, not for KERN3
   add-apt-repository restricted
