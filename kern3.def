@@ -36,7 +36,7 @@ Include: software-properties-common
 	pip install atpy psutil katdal==0.9 astro-tigger astro-tigger-lsm
 
 	#Install Cubical
-	pip install git+https://github.com/ratt-ru/CubiCal.git
+	#pip install git+https://github.com/ratt-ru/CubiCal.git
 
 	# Ensure /software is there to install unpackaged stuff
 	SOFTWARE_PATH=/software
@@ -57,22 +57,22 @@ Include: software-properties-common
 
 
 	# Installation of DDFAcet
-	pip install -U pip setuptools
-  pip install DDFacet --force-reinstall -U
+	#pip install -U pip setuptools
+  #pip install DDFacet --force-reinstall -U
 
 
 	# Installation KillMS
-	git clone https://github.com/saopicc/killMS.git
-	cd killMS/Predict
-	make
-	cd ../Array/Dot
-	make
-	cd ../../Gridder
-	make
+	#git clone https://github.com/saopicc/killMS.git
+	#cd killMS/Predict
+	#make
+	#cd ../Array/Dot
+	#make
+	#cd ../../Gridder
+	#make
 
 	#Install Montblac
-	pip install -U pip setuptools wheel
-	pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
+	#pip install -U pip setuptools wheel
+	#pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
 
 
 	# Montage 5.x
