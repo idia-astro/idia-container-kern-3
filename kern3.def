@@ -12,7 +12,7 @@ Include: software-properties-common
 %post
 	# Installation of the KERN3 packages
 	apt-get update -y
-	apt-get install -y wget vim apt-utils git
+	apt-get install -y wget vim apt-utils wget git
 	add-apt-repository -s ppa:kernsuite/kern-3
   # Restricted required for CUDA support, not for KERN3
   add-apt-repository restricted
@@ -38,9 +38,6 @@ Include: software-properties-common
 	#Install Cubical
 	pip install git+https://github.com/ratt-ru/CubiCal.git
 
-	#Install Montblac
-	pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
-
 	# Ensure /software is there to install unpackaged stuff
 	SOFTWARE_PATH=/software
 	mkdir -p $SOFTWARE_PATH
@@ -49,6 +46,33 @@ Include: software-properties-common
 	mkdir -p /opt/casa
 	cd /opt/casa
   wget -O - https://alma-dl.mtk.nao.ac.jp/ftp/casa/distro/linux/release/el7/casa-release-5.1.1-5.el7.tar.gz | tar xz
+
+	# Installation of PyBDSF
+	apt-get install -y libboost-python-dev gfortran
+	pip install --upgrade setuptools numpy scipy pyfits pywcs
+	cd $INSTALLER/
+	git clone https://github.com/lofar-astron/PyBDSF.git
+	cd PyB*
+	python setup.py install
+
+
+	# Installation of DDFAcet
+	pip install -U pip setuptools
+  pip install DDFacet --force-reinstall -U
+
+
+	# Installation KillMS
+	git clone https://github.com/saopicc/killMS.git
+	cd killMS/Predict
+	make
+	cd ../Array/Dot
+	make
+	cd ../../Gridder
+	make
+
+	#Install Montblac
+	pip install -U pip setuptools wheel
+	pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
 
 
 	# Montage 5.x
