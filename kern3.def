@@ -7,7 +7,6 @@ Include: software-properties-common
 	export LC_ALL=C
 	export SOFTWARE_PATH=/software
 	export PATH=$SOFTWARE_PATH/Montage/bin:$PATH
-	export PATH=/opt/casa/casa-release-5.1.1-5.el7/bin/:$PATH
 
 %post
 	# Installation of the KERN3 packages
@@ -42,10 +41,6 @@ Include: software-properties-common
 	SOFTWARE_PATH=/software
 	mkdir -p $SOFTWARE_PATH
 
-	#casa Installation
-	mkdir -p /opt/casa
-	cd /opt/casa
-  wget -O - https://alma-dl.mtk.nao.ac.jp/ftp/casa/distro/linux/release/el7/casa-release-5.1.1-5.el7.tar.gz | tar xz
 
 	# Installation of PyBDSF
 	apt-get install -y libboost-python-dev gfortran
@@ -54,25 +49,6 @@ Include: software-properties-common
 	git clone https://github.com/lofar-astron/PyBDSF.git
 	cd PyB*
 	python setup.py install
-
-
-	# Installation of DDFAcet
-	#pip install -U pip setuptools
-  #pip install DDFacet --force-reinstall -U
-
-
-	# Installation KillMS
-	#git clone https://github.com/saopicc/killMS.git
-	#cd killMS/Predict
-	#make
-	#cd ../Array/Dot
-	#make
-	#cd ../../Gridder
-	#make
-
-	#Install Montblac
-	#pip install -U pip setuptools wheel
-	#pip install --log=mb.log git+git://github.com/ska-sa/montblanc.git@master
 
 
 	# Montage 5.x
